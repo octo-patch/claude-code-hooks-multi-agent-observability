@@ -25,9 +25,22 @@ PROVIDER_KEY = "minimax"
 PROVIDER_DISPLAY_NAME = "MiniMax"
 DEFAULT_REGION = "global_en"
 DEFAULT_PROTOCOL = "anthropic"
-DEFAULT_MODEL = "MiniMax-M3"
+DEFAULT_MODEL = "MiniMax-M3.1-Flash"
 
 MODEL_REGISTRY = {
+    "MiniMax-M3.1-Flash": {
+        "context_window": 1000000,
+        "max_output_tokens": 524288,
+        "pricing_usd_per_million_tokens": {
+            "input": 0.15,
+            "output": 0.6,
+            "cache_read": 0.015,
+            "cache_write": None,
+        },
+        "input_modalities": ["text", "image", "video"],
+        "thinking": ["adaptive"],
+        "reasoning_efforts": ["low", "medium", "high", "xhigh", "max"],
+    },
     "MiniMax-M3": {
         "context_window": 1000000,
         "pricing_usd_per_million_tokens": {
@@ -38,17 +51,6 @@ MODEL_REGISTRY = {
         },
         "input_modalities": ["text", "image", "video"],
         "thinking": ["adaptive", "disabled"],
-    },
-    "MiniMax-M2.7": {
-        "context_window": 204800,
-        "pricing_usd_per_million_tokens": {
-            "input": 0.3,
-            "output": 1.2,
-            "cache_read": 0.06,
-            "cache_write": 0.375,
-        },
-        "input_modalities": ["text"],
-        "thinking": ["always_on"],
     },
 }
 
@@ -88,7 +90,8 @@ def get_provider_config():
 
     if not api_key or region not in ENDPOINT_REGISTRY:
         return None
-    if protocol not in {"openai", "anthropic"} or model not in MODEL_REGISTRY:
+    # The catalog recommends current models; explicit legacy/custom IDs pass through.
+    if protocol not in {"openai", "anthropic"} or not model:
         return None
 
     endpoint = ENDPOINT_REGISTRY[region]

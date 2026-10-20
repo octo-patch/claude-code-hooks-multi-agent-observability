@@ -406,7 +406,7 @@ Copy `.env.sample` to `.env` in the project root and fill in your API keys:
 - `MINIMAX_API_KEY` – MiniMax API key (required when `LLM_PROVIDER=minimax`)
 - `MINIMAX_REGION` – `global_en` or `cn_zh` (default: `global_en`)
 - `MINIMAX_PROTOCOL` – `openai` or `anthropic` (default: `anthropic`)
-- `MINIMAX_MODEL` – `MiniMax-M3` or `MiniMax-M2.7` (default: `MiniMax-M3`)
+- `MINIMAX_MODEL` – `MiniMax-M3.1-Flash` (default) or `MiniMax-M3`; explicit legacy/custom model IDs are passed through unchanged
 - `ELEVENLABS_API_KEY` – ElevenLabs API key (optional, for TTS)
 - `FIRECRAWL_API_KEY` – Firecrawl API key (optional, for web scraping)
 
@@ -420,6 +420,8 @@ Set `LLM_PROVIDER=minimax` and configure the MiniMax variables above to route ho
 | `cn_zh` | `https://api.minimaxi.com/v1` | `https://api.minimaxi.com/anthropic` |
 
 The Anthropic-compatible base URL remains the configured `/anthropic` value; requests append `/v1/messages` at runtime.
+
+The catalog lists [MiniMax-M3.1-Flash and MiniMax-M3](https://platform.minimax.io/docs/guides/models-intro). Existing `MINIMAX_MODEL` selections are preserved. Requests leave thinking and effort unset to use the API defaults: Flash uses adaptive thinking with maximum effort; M3 uses the selected protocol's thinking default.
 
 **Client** (`.env` file in `apps/client/.env`):
 - `VITE_MAX_EVENTS_TO_DISPLAY=100` – Maximum events to show (removes oldest when exceeded)
